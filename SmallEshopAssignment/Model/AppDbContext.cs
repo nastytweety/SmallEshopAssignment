@@ -19,7 +19,9 @@ namespace SmallEshopAssignment.Model
         }
 
         public DbSet<Customer> Customers { get; set; }
-       // public DbSet<Ticker> Tickers { get; set; }
-       // public DbSet<Currency> Currencies { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<Basket> Baskets { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
 }
