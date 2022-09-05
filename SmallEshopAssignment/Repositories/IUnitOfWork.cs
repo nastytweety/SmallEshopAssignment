@@ -2,9 +2,9 @@
 {
     public interface IUnitOfWork : IDisposable
     {
-        //ITickerRepository Tickers { get; }
-        //ISourceRepository Sources { get; }
-        //ICurrencyrepository Currencies { get; }
-        int Save();
+        IBasketRepository Baskets { get; }
+        IProductRepository Products { get; }
+        IOrderRepository Orders { get; }
+        Task<int> Save();
     }
 }

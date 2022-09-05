@@ -27,7 +27,7 @@ namespace SmallEshopAssignment.Repositories
 
         public IEnumerable<TEntity> GetAll()
         {
-            return _context.Set<TEntity>().ToList();
+            return  _context.Set<TEntity>().AsEnumerable();
         }
 
         public void Remove(TEntity entity)

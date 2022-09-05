@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmallEshopAssignment.Model;
+using SmallEshopAssignment.Repositories;
 
 namespace SmallEshopAssignment.Controllers
 {
@@ -13,40 +14,40 @@ namespace SmallEshopAssignment.Controllers
     [ApiController]
     public class BasketsController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public BasketsController(AppDbContext context)
+        public BasketsController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: api/Baskets
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Basket>>> GetBaskets()
+        public ActionResult<IEnumerable<Basket>> GetBaskets()
         {
-          if (_context.Baskets == null)
-          {
-              return NotFound();
-          }
-            return await _context.Baskets.ToListAsync();
+            if (_unitOfWork.Baskets == null)
+            {
+                return NotFound();
+            }
+            return Ok(_unitOfWork.Baskets.GetAll());
         }
 
         // GET: api/Baskets/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Basket>> GetBasket(int id)
         {
-          if (_context.Baskets == null)
-          {
-              return NotFound();
-          }
-            var basket = await _context.Baskets.FindAsync(id);
+            if (_unitOfWork.Baskets == null)
+            {
+                return NotFound();
+            }
+            var basket = _unitOfWork.Baskets.Find(x=>x.Id == id);
 
             if (basket == null)
             {
                 return NotFound();
             }
 
-            return basket;
+            return Ok(basket);
         }
 
         // PUT: api/Baskets/5
@@ -59,24 +60,15 @@ namespace SmallEshopAssignment.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(basket).State = EntityState.Modified;
-
-            try
+            Basket dbbasket = _unitOfWork.Baskets.Get(id).Result;
+            if (dbbasket == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!BasketExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                //_unitOfWork.Baskets.
             }
-
             return NoContent();
         }
 
@@ -85,39 +77,30 @@ namespace SmallEshopAssignment.Controllers
         [HttpPost]
         public async Task<ActionResult<Basket>> PostBasket(Basket basket)
         {
-          if (_context.Baskets == null)
-          {
-              return Problem("Entity set 'AppDbContext.Baskets'  is null.");
-          }
-            _context.Baskets.Add(basket);
-            await _context.SaveChangesAsync();
+            _unitOfWork.Baskets.Add(basket);
+            _unitOfWork.Save();
 
             return CreatedAtAction("GetBasket", new { id = basket.Id }, basket);
         }
 
         // DELETE: api/Baskets/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBasket(int id)
+        public IActionResult DeleteBasket(int id)
         {
-            if (_context.Baskets == null)
+            if (_unitOfWork.Baskets == null)
             {
                 return NotFound();
             }
-            var basket = await _context.Baskets.FindAsync(id);
+            Basket basket = _unitOfWork.Baskets.Get(id).Result;
             if (basket == null)
             {
                 return NotFound();
             }
 
-            _context.Baskets.Remove(basket);
-            await _context.SaveChangesAsync();
+            _unitOfWork.Baskets.Remove(basket);
+            _unitOfWork.Save();
 
             return NoContent();
-        }
-
-        private bool BasketExists(int id)
-        {
-            return (_context.Baskets?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
