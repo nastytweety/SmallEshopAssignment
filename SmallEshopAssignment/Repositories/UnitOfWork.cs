@@ -8,6 +8,7 @@ namespace SmallEshopAssignment.Repositories
         public IBasketRepository Baskets { get; set; }
         public IProductRepository Products { get; set; }
         public IServiceRepository Services { get; set; }
+        public IOrderRepository Orders { get; set; }
 
         public UnitOfWork(AppDbContext context)
         {
