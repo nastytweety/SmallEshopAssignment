@@ -1,6 +1,6 @@
 ﻿using SmallEshopAssignment.Model;
 
-namespace SmallEshopAssignment.Repositories
+namespace SmallEshopAssignment.IRepositories
 {
     public interface IBasketRepository : IRepository<Basket>
     {

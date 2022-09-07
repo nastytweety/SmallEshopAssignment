@@ -1,4 +1,5 @@
-﻿using SmallEshopAssignment.Model;
+﻿using SmallEshopAssignment.IRepositories;
+using SmallEshopAssignment.Model;
 
 namespace SmallEshopAssignment.Repositories
 {
@@ -9,13 +10,16 @@ namespace SmallEshopAssignment.Repositories
         public IProductRepository Products { get; set; }
         public IServiceRepository Services { get; set; }
         public IOrderRepository Orders { get; set; }
+        public ICustomerRepository Customers { get; set; }
 
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
             Baskets = new BasketRepository(_context);
-            //Products = new ProductsRepository(_context);
-            //Services = new ServicesRepository(_context);
+            Products = new ProductRepository(_context);
+            Services = new ServiceRepository(_context);
+            Orders = new OrderRepository(_context);
+            Customers = new CustomerRepository(_context);
         }
         public void Dispose()
         {

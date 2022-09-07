@@ -3,13 +3,14 @@ using Newtonsoft.Json;
 using SmallEshopAssignment.Mappings;
 using SmallEshopAssignment.Model;
 using SmallEshopAssignment.Repositories;
+using SmallEshopAssignment.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("ConnStr")));
-//builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<ICatalogueService, CatalogueService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
 builder.Services.AddControllers().AddNewtonsoftJson(options =>

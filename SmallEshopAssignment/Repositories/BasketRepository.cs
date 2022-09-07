@@ -1,4 +1,5 @@
-﻿using SmallEshopAssignment.Model;
+﻿using SmallEshopAssignment.IRepositories;
+using SmallEshopAssignment.Model;
 
 namespace SmallEshopAssignment.Repositories
 {
